@@ -2,7 +2,9 @@
 , dependencies =
   [ "console"
   , "effect"
+  , "foldable-traversable"
   , "lists"
+  , "maybe"
   , "ordered-collections"
   , "prelude"
   , "tuples"
