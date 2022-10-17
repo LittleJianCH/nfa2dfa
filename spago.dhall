@@ -1,12 +1,15 @@
 { name = "my-project"
 , dependencies =
-  [ "console"
+  [ "arrays"
+  , "assert"
+  , "console"
   , "effect"
   , "foldable-traversable"
   , "lists"
   , "maybe"
   , "ordered-collections"
   , "prelude"
+  , "strings"
   , "tuples"
   , "undefined"
   ]

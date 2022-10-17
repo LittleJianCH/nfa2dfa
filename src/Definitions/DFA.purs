@@ -1,16 +1,19 @@
-module Definitions.DFA (
-  DFA ,
-  recognize
-) where
+module Definitions.DFA
+  ( DFA
+  , recognize
+  , recognizeStr
+  )
+  where
 
-import Prelude (class Ord, ($))
+import Data.Foldable (class Foldable, foldM)
 import Data.List as S
 import Data.Map as M
-import Data.Set (Set)
-import Data.Tuple (Tuple)
-import Data.Foldable (class Foldable, foldM)
 import Data.Maybe (Maybe(..))
+import Data.Set (Set)
+import Data.String.CodeUnits (toCharArray)
+import Data.Tuple (Tuple)
 import Data.Tuple.Nested ((/\))
+import Prelude (class Ord, ($), (<<<))
 
 type DFA a = {
   start      :: a,
@@ -27,3 +30,8 @@ recognize dfa str = check $ foldM (\t c -> M.lookup (t /\ c) trans) dfa.start st
         check res = case res of
           Just r -> S.elem r dfa.accpects
           Nothing -> false
+
+recognizeStr :: forall a .
+  Ord a =>
+  DFA a -> String -> Boolean
+recognizeStr dfa = recognize dfa <<< toCharArray
