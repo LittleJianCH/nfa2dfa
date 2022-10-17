@@ -3,14 +3,13 @@ module Definitions.NFA (
   recognize
 ) where
 
-import Prelude (class Ord, ($))
-import Data.Foldable (any, elem, foldl)
-import Data.Maybe (fromMaybe)
-import Data.List (List)
+import Data.Foldable (class Foldable, any, elem, foldl)
 import Data.Map as M
+import Data.Maybe (fromMaybe)
 import Data.Set as S
 import Data.Tuple (Tuple)
 import Data.Tuple.Nested ((/\))
+import Prelude (class Ord, ($))
 
 type NFA a = {
   starts     :: S.Set a,
@@ -18,7 +17,9 @@ type NFA a = {
   transition :: M.Map (Tuple a Char) (S.Set a)
 }
 
-recognize :: forall a . Ord a => NFA a -> List Char -> Boolean
+recognize :: forall a f .
+  Ord a => Foldable f =>
+  NFA a -> f Char -> Boolean
 recognize nfa str = check $
   foldl step nfa.starts str
   where check :: S.Set a -> Boolean
