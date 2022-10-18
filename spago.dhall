@@ -10,8 +10,8 @@
   , "ordered-collections"
   , "prelude"
   , "strings"
+  , "transformers"
   , "tuples"
-  , "undefined"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]
