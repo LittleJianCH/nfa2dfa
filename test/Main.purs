@@ -10,6 +10,7 @@ import Definitions.NFA (NFA)
 import Definitions.NFA as N
 import Effect (Effect)
 import Effect.Console (log)
+import NFA2DFA (nfa2dfa)
 import Prelude (Unit, discard, ($), (==))
 import Test.Assert (assert)
 
@@ -84,6 +85,9 @@ main = do
     zeroOddOneEvenTests
   assert $ all
     (\(str /\ expected) -> N.recognizeStr nfa1 str == expected)
+    zeroOddOneEvenTests
+  assert $ all
+    (\(str /\ expected) -> D.recognizeStr (nfa2dfa nfa1) str == expected)
     zeroOddOneEvenTests
 
   log "All test passed 🎉🎉🎉"
