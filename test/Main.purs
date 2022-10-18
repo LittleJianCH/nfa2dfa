@@ -1,6 +1,5 @@
 module Test.Main where
 
-import Prelude (Unit, discard, ($), (==))
 import Data.Array (all)
 import Data.Map as M
 import Data.Set as S
@@ -11,6 +10,7 @@ import Definitions.NFA (NFA)
 import Definitions.NFA as N
 import Effect (Effect)
 import Effect.Console (log)
+import Prelude (Unit, discard, ($), (==))
 import Test.Assert (assert)
 
 dfa1 :: DFA Int
@@ -24,7 +24,8 @@ dfa1 = {
     (2 /\ '1') /\ 3,
     (3 /\ '0') /\ 2,
     (3 /\ '1') /\ 3
-  ]
+  ],
+  alphabet : S.fromFoldable ['0', '1']
 }
 
 dfa2 :: DFA Int
@@ -45,7 +46,8 @@ dfa2 = {
     (4 /\ '1') /\ 5,
     (5 /\ '0') /\ 2,
     (5 /\ '1') /\ 4
-  ]
+  ],
+  alphabet : S.fromFoldable ['0', '1']
 }
 
 nfa1 :: NFA Int
@@ -60,7 +62,8 @@ nfa1 = {
     (1 /\ '1') /\ S.fromFoldable [2],
     (2 /\ '0') /\ S.fromFoldable [1],
     (2 /\ '1') /\ S.fromFoldable [1, 4]
-  ]
+  ],
+  alphabet : S.fromFoldable ['0', '1']
 }
 
 main :: Effect Unit

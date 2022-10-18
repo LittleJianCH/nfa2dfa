@@ -17,7 +17,8 @@ import Prelude (class Ord, ($), (<<<))
 type NFA a = {
   starts     :: S.Set a,
   accpects   :: S.Set a,
-  transition :: M.Map (Tuple a Char) (S.Set a)
+  transition :: M.Map (Tuple a Char) (S.Set a),
+  alphabet   :: S.Set Char
 }
 
 recognize :: forall a f .
