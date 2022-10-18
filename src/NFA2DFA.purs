@@ -29,7 +29,7 @@ nfa2dfa nfa =
   in {
     start : nfa.starts,
     alphabet : nfa.alphabet,
-    accpects : S.filter (any (\a -> elem a nfa.accpects)) visited,
+    accepts : S.filter (any (\a -> elem a nfa.accepts)) visited,
     transition : transition
   }
 

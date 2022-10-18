@@ -16,7 +16,7 @@ import Prelude (class Ord, ($), (<<<))
 
 type NFA a = {
   starts     :: S.Set a,
-  accpects   :: S.Set a,
+  accepts    :: S.Set a,
   transition :: M.Map (Tuple a Char) (S.Set a),
   alphabet   :: S.Set Char
 }
@@ -27,7 +27,7 @@ recognize :: forall a f .
 recognize nfa str = check $
   foldl step nfa.starts str
   where check :: S.Set a -> Boolean
-        check as = any (\a -> elem a nfa.accpects) as
+        check as = any (\a -> elem a nfa.accepts) as
         step :: S.Set a -> Char -> S.Set a
         step ts c = S.unions $
           S.map (\t ->fromMaybe S.empty $ M.lookup (t /\ c) trans) ts

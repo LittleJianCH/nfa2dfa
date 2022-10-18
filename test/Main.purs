@@ -17,7 +17,7 @@ dfa1 :: DFA Int
 -- dfa1 is a DFA that accepts the language {0 (0|1)^n 1 | n >= 0}
 dfa1 = {
   start : 1,
-  accpects : S.fromFoldable [3],
+  accepts : S.fromFoldable [3],
   transition : M.fromFoldable [
     (1 /\ '0') /\ 2,
     (2 /\ '0') /\ 2,
@@ -34,7 +34,7 @@ dfa2 :: DFA Int
 -- or is ended with 1 and has even length
 dfa2 = {
   start : 1,
-  accpects : S.fromFoldable [2, 5],
+  accepts : S.fromFoldable [2, 5],
   transition : M.fromFoldable [
     (1 /\ '0') /\ 2,
     (1 /\ '1') /\ 4,
@@ -56,7 +56,7 @@ nfa1 :: NFA Int
 -- or is ended with 1 and has even length
 nfa1 = {
   starts : S.fromFoldable [1],
-  accpects : S.fromFoldable [3, 4],
+  accepts : S.fromFoldable [3, 4],
   transition : M.fromFoldable [
     (1 /\ '0') /\ S.fromFoldable [2, 3],
     (1 /\ '1') /\ S.fromFoldable [2],

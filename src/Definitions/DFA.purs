@@ -17,7 +17,7 @@ import Prelude (class Ord, ($), (<<<))
 
 type DFA a = {
   start      :: a,
-  accpects   :: Set a,
+  accepts   :: Set a,
   transition :: M.Map (Tuple a Char) a,
   alphabet   :: Set Char
 }
@@ -29,7 +29,7 @@ recognize dfa str = check $ foldM (\t c -> M.lookup (t /\ c) trans) dfa.start st
   where trans = dfa.transition
         check :: Maybe a -> Boolean
         check res = case res of
-          Just r -> S.elem r dfa.accpects
+          Just r -> S.elem r dfa.accepts
           Nothing -> false
 
 recognizeStr :: forall a .
