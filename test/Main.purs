@@ -1,12 +1,8 @@
 module Test.Main where
 
-import Prelude
-import Test.QuickCheck
-import Test.QuickCheck.Gen
-
+import Prelude (class Ord, Unit, bind, discard, pure, ($), (<$>), (<<<), (==))
 import Data.Array (all)
 import Data.Array.NonEmpty (NonEmptyArray)
-import Data.List as L
 import Data.Map as M
 import Data.Set as S
 import Data.Tuple.Nested ((/\))
@@ -18,6 +14,8 @@ import Effect (Effect)
 import Effect.Console (log)
 import NFA2DFA (nfa2dfa)
 import Test.Assert (assert)
+import Test.QuickCheck (class Arbitrary, arbitrary, quickCheck)
+import Test.QuickCheck.Gen (arrayOf1, elements)
 
 dfa1 :: DFA Int
 -- dfa1 is a DFA that accepts the language {0 (0|1)^n 1 | n >= 0}
