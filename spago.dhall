@@ -1,4 +1,4 @@
-{ name = "my-project"
+{ name = "nfa2dfa"
 , dependencies =
   [ "arrays"
   , "assert"
