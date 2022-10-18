@@ -15,5 +15,5 @@
   , "tuples"
   ]
 , packages = ./packages.dhall
-, sources = [ "src/**/*.purs", "test/**/*.purs" ]
+, sources = [ "ps-src/**/*.purs", "test/**/*.purs" ]
 }
