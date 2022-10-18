@@ -1,6 +1,12 @@
 module Test.Main where
 
+import Prelude
+import Test.QuickCheck
+import Test.QuickCheck.Gen
+
 import Data.Array (all)
+import Data.Array.NonEmpty (NonEmptyArray)
+import Data.List as L
 import Data.Map as M
 import Data.Set as S
 import Data.Tuple.Nested ((/\))
@@ -11,7 +17,6 @@ import Definitions.NFA as N
 import Effect (Effect)
 import Effect.Console (log)
 import NFA2DFA (nfa2dfa)
-import Prelude (Unit, discard, ($), (==))
 import Test.Assert (assert)
 
 dfa1 :: DFA Int
@@ -67,6 +72,30 @@ nfa1 = {
   alphabet : S.fromFoldable ['0', '1']
 }
 
+newtype NewNFA a = NewNFA (NFA a)
+
+instance arbNFA :: (Arbitrary a, Ord a) => Arbitrary (NewNFA a) where
+  arbitrary = do
+    let subArray = arrayOf1 <<< elements
+
+    (points :: NonEmptyArray a) <- arrayOf1 arbitrary
+    starts <- subArray points
+    accepts <- subArray points
+    alphabet <- arbitrary
+    transition <- M.fromFoldable <$> arrayOf1 (do
+      from <- elements points
+      to <- subArray points
+      symbol <- elements alphabet
+      pure ((from /\ symbol) /\ S.fromFoldable to)
+    )
+
+    pure $ NewNFA {
+      starts : S.fromFoldable starts,
+      accepts : S.fromFoldable accepts,
+      alphabet : S.fromFoldable alphabet,
+      transition : transition
+    }
+
 main :: Effect Unit
 main = do
   assert $ D.recognizeStr dfa1 "0001" == true
@@ -89,5 +118,8 @@ main = do
   assert $ all
     (\(str /\ expected) -> D.recognizeStr (nfa2dfa nfa1) str == expected)
     zeroOddOneEvenTests
+
+  quickCheck (\(NewNFA nfa) str ->
+    N.recognizeStr (nfa :: NFA Int) str == D.recognizeStr (nfa2dfa nfa) str)
 
   log "All test passed 🎉🎉🎉"

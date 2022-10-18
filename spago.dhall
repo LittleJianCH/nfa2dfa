@@ -9,6 +9,7 @@
   , "maybe"
   , "ordered-collections"
   , "prelude"
+  , "quickcheck"
   , "strings"
   , "transformers"
   , "tuples"
