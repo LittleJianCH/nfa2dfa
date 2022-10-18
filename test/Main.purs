@@ -122,4 +122,4 @@ main = do
   quickCheck (\(NewNFA nfa) str ->
     N.recognizeStr (nfa :: NFA Int) str == D.recognizeStr (nfa2dfa nfa) str)
 
-  log "All test passed 🎉🎉🎉"
+  log "All tests passed 🎉🎉🎉"
