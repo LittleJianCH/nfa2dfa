@@ -1,4 +1,4 @@
-const vis = require("vis-network/standalone/esm/vis-network.min");
+import * as vis from "vis-network/standalone";
 
 var nodes = new vis.DataSet([
   { id: 1, label: "NFA" },

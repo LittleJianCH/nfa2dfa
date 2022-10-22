@@ -4,7 +4,6 @@ const path = require("path");
 module.exports = {
   mode: "development",
   entry: {
-    index: "./src/index.js",
     network: "./src/scripts/network.js",
   },
   resolve: {
