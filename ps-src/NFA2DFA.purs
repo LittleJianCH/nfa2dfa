@@ -4,14 +4,16 @@ module NFA2DFA
   )
   where
 
-import Data.Function.Uncurried (Fn1, Fn4, mkFn1, mkFn4)
-import Data.Tuple (uncurry)
 import Data.Array as A
+import Data.Array.NonEmpty (head)
+import Data.Function.Uncurried (Fn1, Fn4, mkFn1, mkFn4)
 import Data.Map as M
 import Data.Set as S
+import Data.Tuple (uncurry)
 import Data.Tuple.Nested ((/\))
+import Data.Ord (class Ord)
 import Definitions.NFA (NFA)
-import Prelude (map, ($))
+import Prelude (map, ($), (<<<))
 import Transform as T
 
 type Edge a = {
@@ -33,12 +35,18 @@ mkNFA = mkFn4 \starts accepts edges alphabet ->
 type DFA = {
   start :: Array Int,
   accepts :: Array (Array Int),
-  edges :: Array (Edge (Array Int))
+  edges :: Array (Edge (Array Int)),
+  nodes :: Array (Array Int)
 }
+
+unique :: forall a . Ord a => Array a -> Array a
+unique = map head <<< A.group <<< A.sort
 
 nfa2dfa :: Fn1 (NFA Int) DFA
 nfa2dfa = mkFn1 $ \nfa ->
-  let dfa = T.nfa2dfa nfa in {
+  let dfa = T.nfa2dfa nfa
+      keyValues = M.toUnfoldable dfa.transition
+  in {
     start: A.fromFoldable dfa.start,
     accepts: map A.fromFoldable (A.fromFoldable dfa.accepts),
     edges: map (\((from /\ ch) /\ to) -> {
@@ -46,5 +54,8 @@ nfa2dfa = mkFn1 $ \nfa ->
                  to: A.fromFoldable to,
                  char: ch
                })
-               (M.toUnfoldable dfa.transition)
+               keyValues,
+    nodes: unique $ A.concatMap (\((from /\ _) /\ to) ->
+                                  map A.fromFoldable [from, to])
+                                keyValues
   }
