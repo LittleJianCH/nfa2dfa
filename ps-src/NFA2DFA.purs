@@ -1,51 +1,50 @@
 module NFA2DFA
-  ( nfa2dfa
+  ( mkNFA
+  , nfa2dfa
   )
   where
 
-import Prelude (class Ord, Unit, bind, map, not, pure, unit, when, ($))
-import Control.Monad.State (State, execState, get, modify)
-import Data.Foldable (any, elem)
-import Data.List as L
+import Data.Function.Uncurried (Fn1, Fn4, mkFn1, mkFn4)
+import Data.Tuple (uncurry)
+import Data.Array as A
 import Data.Map as M
 import Data.Set as S
-import Data.Traversable (for)
-import Data.Tuple (Tuple, fst)
-import Data.Maybe (fromMaybe)
-import Data.Tuple.Nested (over1, (/\))
-import Definitions.DFA (DFA)
+import Data.Tuple.Nested ((/\))
 import Definitions.NFA (NFA)
+import Prelude (map, ($))
+import Transform as T
 
-steps :: forall a . Ord a => NFA a -> S.Set a -> Char -> S.Set a
-steps nfa as c = S.unions $
-  S.map (\a -> fromMaybe S.empty $ M.lookup (a /\ c) trans) as
-  where trans = nfa.transition
+type Edge a = {
+  from :: a,
+  to   :: a,
+  char :: Char
+}
 
-type Transition a = M.Map (Tuple a Char) a
-
-nfa2dfa :: forall a . Ord a => NFA a -> DFA (S.Set a)
-nfa2dfa nfa =
-  let (visited /\ transition) = dfs_result
-  in {
-    start : nfa.starts,
-    alphabet : nfa.alphabet,
-    accepts : S.filter (any (\a -> elem a nfa.accepts)) visited,
-    transition : transition
+mkNFA :: Fn4 (Array Int) (Array Int) (Array (Edge Int)) (Array Char) (NFA Int)
+mkNFA = mkFn4 \starts accepts edges alphabet ->
+  { starts: S.fromFoldable starts
+  , accepts: S.fromFoldable accepts
+  , transition: A.foldr (uncurry $ M.insertWith S.intersection)
+                        M.empty
+                        (map (\e -> (e.from /\ e.char) /\ (S.singleton e.to)) edges)
+  , alphabet: S.fromFoldable alphabet
   }
 
-  where dfs_result :: Tuple (S.Set (S.Set a)) (Transition (S.Set a))
-        dfs_result = execState (dfs nfa.starts) (S.empty /\ M.empty)
+type DFA = {
+  start :: Array Int,
+  accepts :: Array (Array Int),
+  edges :: Array (Edge (Array Int))
+}
 
-        dfs :: S.Set a ->
-          State (Tuple (S.Set (S.Set a)) (Transition (S.Set a))) Unit
-        dfs cur = do
-          vis <- map fst get
-          when (not (S.member cur vis)) do
-            _ <- modify (over1 (S.insert cur))
-            _ <- (
-              for (L.fromFoldable nfa.alphabet) \c -> do
-                let nexts = steps nfa cur c
-                _ <- modify (map (M.insert (cur /\ c) nexts))
-                dfs nexts)
-            pure unit
-
+nfa2dfa :: Fn1 (NFA Int) DFA
+nfa2dfa = mkFn1 $ \nfa ->
+  let dfa = T.nfa2dfa nfa in {
+    start: A.fromFoldable dfa.start,
+    accepts: map A.fromFoldable (A.fromFoldable dfa.accepts),
+    edges: map (\((from /\ ch) /\ to) -> {
+                 from: A.fromFoldable from,
+                 to: A.fromFoldable to,
+                 char: ch
+               })
+               (M.toUnfoldable dfa.transition)
+  }
