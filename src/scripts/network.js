@@ -60,8 +60,6 @@ const nfa = mkNFA([1], [3, 4], [edge(1, '0', 2)
                               , edge(2, '1', 4)], ['0', '1']);
 const dfa = nfa2dfa(nfa);
 
-console.log(JSON.stringify(dfa));
-
 var nodes = getNodes(dfa);
 var edges = getEdges(dfa);
 
