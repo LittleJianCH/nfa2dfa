@@ -12,7 +12,7 @@ import Definitions.NFA (NFA)
 import Definitions.NFA as N
 import Effect (Effect)
 import Effect.Console (log)
-import NFA2DFA (nfa2dfa)
+import Transform (nfa2dfa)
 import Test.Assert (assert)
 import Test.QuickCheck (class Arbitrary, arbitrary, quickCheck)
 import Test.QuickCheck.Gen (arrayOf1, elements)

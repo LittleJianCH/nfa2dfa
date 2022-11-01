@@ -5,6 +5,7 @@
   , "console"
   , "effect"
   , "foldable-traversable"
+  , "functions"
   , "lists"
   , "maybe"
   , "ordered-collections"
