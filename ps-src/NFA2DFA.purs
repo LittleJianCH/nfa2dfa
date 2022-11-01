@@ -8,10 +8,10 @@ import Data.Array as A
 import Data.Array.NonEmpty (head)
 import Data.Function.Uncurried (Fn1, Fn4, mkFn1, mkFn4)
 import Data.Map as M
+import Data.Ord (class Ord)
 import Data.Set as S
 import Data.Tuple (uncurry)
 import Data.Tuple.Nested ((/\))
-import Data.Ord (class Ord)
 import Definitions.NFA (NFA)
 import Prelude (map, ($), (<<<))
 import Transform as T
@@ -26,7 +26,7 @@ mkNFA :: Fn4 (Array Int) (Array Int) (Array (Edge Int)) (Array Char) (NFA Int)
 mkNFA = mkFn4 \starts accepts edges alphabet ->
   { starts: S.fromFoldable starts
   , accepts: S.fromFoldable accepts
-  , transition: A.foldr (uncurry $ M.insertWith S.intersection)
+  , transition: A.foldr (uncurry $ M.insertWith S.union)
                         M.empty
                         (map (\e -> (e.from /\ e.char) /\ (S.singleton e.to)) edges)
   , alphabet: S.fromFoldable alphabet

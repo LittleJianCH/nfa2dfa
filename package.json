@@ -18,6 +18,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
+    "object-hash": "^3.0.0",
     "vis-network": "^9.1.2"
   }
 }
