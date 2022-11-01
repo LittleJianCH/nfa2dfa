@@ -17,7 +17,7 @@ import Prelude (class Ord, ($), (<<<))
 
 type DFA a = {
   start      :: a,
-  accepts   :: Set a,
+  accepts    :: Set a,
   transition :: M.Map (Tuple a Char) a,
   alphabet   :: Set Char
 }
